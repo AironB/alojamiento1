@@ -1,0 +1,27 @@
+
+  .search-container {
+    margin-right: 20px; /* Adjust the margin as needed */
+  }
+
+  .login-container {
+    margin-left: 20px; /* Adjust the margin as needed */
+  }
+
+  .search-container form {
+    display: flex;
+    align-items: center;
+  }
+
+  .search-container input {
+    margin-right: 10px; /* Adjust the spacing between input and button */
+  }
+
+  .login-container .btn {
+    background-color: #007bff; /* Primary color */
+    border-color: #007bff;
+  }
+
+  .login-container .btn:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+    border-color: #0056b3;
+  }
