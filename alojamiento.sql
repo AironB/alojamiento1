@@ -1,30 +1,33 @@
 create database alojamientos;
 use alojamientos;
-create table empleados(
-IdEmpleado int auto_increment primary key,
-nombre varchar(15) not null,
-apellido varchar(15) not null,
-Telefono varchar(15) not null,
-email varchar(15) not null,
-correo varchar(20) not null,
-cargo varchar(15) not null,
-activo boolean default 1)
 create table usuarios(
-IdUsuario int auto_increment primary key,
-UserName varchar(10) not null,
-Passwd varchar(10) not null,
-TipoUsr varchar(8) not null,
-IdEmpleado int,
-IdCliente int,
-activo boolean default 1)
-create table clientes(
-IdCliente int auto_increment primary key,
-nombre varchar(15) not null,
-apellido varchar(15) not null,
-telefono varchar(15) not null,
-correo varchar(20) not null
-)
-create table productos(
-IdProducto int auto_increment primary key,
-NameProducto varchar(25) not null,
-activo boolean default 1)
+id_usuario int auto_increment primary key,
+administrador boolean default 0,
+/*Agregue esta columna de aca por que pensemos en el usuario Juan Perez, cuantas personas se pueden registrar con ese usuario y por eso lo deje como unico*/
+user_name varchar(255) not null unique,
+nombre varchar(20) not null,
+apellido varchar(20) not null,
+email varchar(100) not null,
+/*Password es una palbra reservada por eso le puse passwrd*/
+passwrd varchar(255) not null);
+create table reservaciones(
+id_reservacion int auto_increment primary key,
+id_usuario int,
+id_alojamiento int,
+fecha_entrada date,
+fecha_salida date,
+cantidad_personas int,
+comentarios text,
+estado boolean default 1);
+create table alojamientos(
+id_alojamiento int auto_increment primary key,
+nombre_alojamiento varchar(20) not null,
+imagen varchar(255),
+descripcion text,
+ubicacion varchar(100) not null,
+precio decimal(10,2),
+estado boolean,
+id_tipo_alojamiento int);
+create table tipo_alojamientos(
+id_tipo_alojamiento int auto_increment primary key,
+nombre varchar(20) not null)
