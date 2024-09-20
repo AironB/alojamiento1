@@ -1,0 +1,43 @@
+en cada pagina que debamos proteger agregar:
+// Verificar si el usuario está autenticado
+session_start();
+if (!isset($_SESSION['usuario_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+// Verificar si el usuario es admin
+if ($_SESSION['admin'] != true) {
+    header("Location: landing.php");
+    exit();
+}
+
+En la landing page, mostrarás los alojamientos con la opción de reservar solo si el usuario está autenticado.
+
+<?php if (isset($_SESSION['usuario_id'])): ?>
+    <button onclick="reservarAlojamiento()">Reservar</button>
+<?php else: ?>
+    <button onclick="swal({title: 'Debes iniciar sesión primero', text: '¿Deseas iniciar sesión ahora?', icon: 'warning', buttons: true}).then((willLogin) => { if (willLogin) { window.location.href = 'login.php'; }})">Reservar</button>
+<?php endif; ?>
+
+Vista de Alojamiento(Admin):
+En esta vista, el usuario admin hacer CRUD de alojamientos, ya que el acceso está restringido a usuarios admin.
+// CRUD para alojamientos
+if ($_SESSION['admin']) {
+    // Mostrar botones de CRUD solo para admin
+    echo '<button onclick="crearAlojamiento()">Crear</button>';
+    echo '<button onclick="editarAlojamiento()">Editar</button>';
+    echo '<button onclick="eliminarAlojamiento()">Eliminar</button>';
+}
+ejemplo para cerrar sesion:
+<a href="logout.php">Cerrar Sesión</a>
+para el archivo cerrar sesion.php
+<?php
+require_once 'Autenticacion.php';
+
+$auth = new Autenticacion($db);
+$auth->cerrarSesion();
+
+header("Location: landing.php");
+exit();
+?>
