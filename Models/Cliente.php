@@ -17,12 +17,12 @@ class Cliente extends Usuario{
         #codigo para crear en db
     }
     // Método para editar los datos del usuario
-    public function editarUsuario(string $nombre, string $apellido, string $email): void {
-        $this->setNombre($nombre);
-        $this->setApellido($apellido);
-        $this->setEmail($email);
-        #codigo para actualizar en db
-    }
+    // public function editarUsuario(string $nombre, string $apellido, string $email): void {
+    //     $this->setNombre($nombre);
+    //     $this->setApellido($apellido);
+    //     $this->setEmail($email);
+    //     #codigo para actualizar en db
+    // }
 }
 /**Este código debe ir en un archivo dedicado al registro de usuarios. Este archivo se llamará cuando
  * el usuario envíe el formulario de registro desde la vista de creación de cuentas. */

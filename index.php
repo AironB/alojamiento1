@@ -17,8 +17,7 @@
         </div>
         <div>
         <input type="text" class="text" placeholder="Password">
-        </div>
-         
+    </div>
         <button type="button" class="btn btn-success">Iniciar Sesion</button>
         <button type="button" class="btn btn-primary">Registrarse</button>
         </div>
