@@ -1,6 +1,6 @@
 <?php
 //incluye la database
-require_once 'Database.php';
+require_once '../Database/Database.php';
 //instanciar la clase database
 $db = new Database();
 

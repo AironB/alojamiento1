@@ -28,12 +28,13 @@ abstract class Usuario{
     }
 
     //getter y setter
-    public function getIdUsuario(): int {
+    public function getIdUsuario(): ?int {
         return $this->id_usuario;
     }
 
-    public function setIdUsuario(int $id_usuario): void {
-        $this->id_usuario = $id_usuario;
+    public function setIdUsuario(?int $id_usuario): void {
+            $this->id_usuario = $id_usuario;
+
     }
 
     public function getNombre(): string {
@@ -70,9 +71,9 @@ abstract class Usuario{
         return $this->password;
     }
 
-    protected function cifrarPassword(string $password): string {
+    protected function cifrarPassword(string $password): void {
         // Cifrar la contraseña usando password_hash
-    return password_hash($password, PASSWORD_DEFAULT);
+        $this->password =password_hash($password, PASSWORD_DEFAULT);
     }
 
     public function isAdmin(): bool {

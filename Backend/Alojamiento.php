@@ -22,11 +22,11 @@ class Alojamiento {
     }
 
     // Getters y Setters
-    public function getIdAlojamiento(): int {
+    public function getIdAlojamiento(): ?int {
         return $this->id_alojamiento;
     }
 
-    public function setIdAlojamiento(int $id_alojamiento): void {
+    public function setIdAlojamiento(?int $id_alojamiento): void {
         $this->id_alojamiento = $id_alojamiento;
     }
 
@@ -151,6 +151,7 @@ class Alojamiento {
                 ':id_tipo_alojamiento' => $this->getIdTipoAlojamiento(),
                 ':id_alojamiento' => $this->getIdAlojamiento()
             ]);
+            return true;
         } catch (PDOException $e) {
             echo "Error: ". $e->getMessage();
             return false;

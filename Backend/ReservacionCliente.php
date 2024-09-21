@@ -20,9 +20,7 @@ class ReservacionCliente extends Reservacion {
     }
 
     // Método para cancelar la reservación
-    public function cancelarReservacion(): void {
-        $this->setEstado(false); // Cambiar el estado a false (cancelada)
-        // Código para actualizar en la base de datos
+    public function cancelarReservacion(): bool {
     }
 
     // Método para editar la reservación

@@ -26,7 +26,6 @@ class Admin extends Usuario{
 
             // Ejecutar la consulta con los valores correspondientes
             return $stmt->execute([
-                ':id_usuario' => $this->getIdUsuario(),
                 ':nombre' => $this->getNombre(),
                 ':apellido' => $this->getApellido(),
                 ':email' => $this->getEmail(),

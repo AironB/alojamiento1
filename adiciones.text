@@ -41,3 +41,29 @@ $auth->cerrarSesion();
 header("Location: landing.php");
 exit();
 ?>
+
+/**Este código debe ir en un archivo dedicado al registro de usuarios. Este archivo se llamará cuando
+ * el usuario envíe el formulario de registro desde la vista de creación de cuentas. */
+// Comprobamos si el formulario fue enviado
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Validar que se reciban todos los campos necesarios
+    if (!empty($_POST['nombre']) && !empty($_POST['apellido']) && !empty($_POST['email']) && !empty($_POST['password'])) {
+        
+        $nombre = $_POST['nombre'];
+        $apellido = $_POST['apellido'];
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        
+        // Crear un nuevo cliente. Suponemos que $id_usuario será autogenerado por la base de datos.
+        $cliente = new Cliente(null, $nombre, $apellido, $email, $password); // Enviamos null si el id_usuario es autogenerado
+        
+        // Intentar crear el usuario en la base de datos
+        if ($cliente->crearUsuario($db)) {
+            echo "<script>Swal.fire('Success', 'Usuario registrado exitosamente', 'success');</script>";
+        } else {
+            echo "<script>Swal.fire('Error', 'Fallo al registrar usuario', 'error');</script>";
+        }
+    } else {
+        echo "<script>Swal.fire('Error', 'Todos los campos son requeridos', 'error');</script>";
+    }
+}
