@@ -37,6 +37,6 @@ create table reservaciones(
 	cantidad_personas int,
 	comentarios text,
 	estado boolean default 1,
-    foreign key (id_usuario) references usuarios(id_isuario),
+    foreign key (id_usuario) references usuarios(id_usuario),
     foreign key (id_alojamiento) references alojamientos(id_alojamiento)
 );
