@@ -3,16 +3,16 @@
  * esta clase sera abstract ya que puede tener diferentess tipos de usuarios (cliente y admin)
  */
 abstract class Usuario{
-    protected int $id_usuario;
-    protected string $nombre;
-    protected string $apellido;
-    protected string $email;
-    protected string $password;
-    protected bool $admin;
+    protected $id_usuario;
+    protected $nombre;
+    protected $apellido;
+    protected $email;
+    protected $password;
+    protected $admin;
 
     #cconstruct
     public function __construct(
-        int $id_usuario,
+        ?int $id_usuario,
         string $nombre,
         string $apellido,
         string $email,
@@ -83,6 +83,6 @@ abstract class Usuario{
         $this->admin = $admin;
     }
     //metodo para crear usuario
-    abstract public function crearUsuario(): void;
+    abstract public function crearUsuario(PDO $db): bool;
 }
 ?>
