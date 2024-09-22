@@ -46,12 +46,13 @@ class ReservacionCliente extends Reservacion {
     public function cancelarReservacion(PDO $db): bool {
         try {
             // Consulta sql
-            $sql = "UPDATE reservaciones SET estado = false WHERE id_reservacion = :id_reservacion" ;
+            $sql = "UPDATE reservaciones SET estado = false WHERE id_reservacion = :id_reservacion AND id_usuario = :id_usuario" ;
             // Preparar la consulta
             $stmt = $db->prepare($sql);
             // Ejecutar la consulta con los valores correspondientes
             $stmt->execute([
-                'id_reservacion' => $this->getIdReservacion()
+                'id_reservacion' => $this->getIdReservacion(),
+                'id_usuario' => $this->getIdUsuario()
             ]);
             return true; // Reservación cancelada correctamente
         } catch (PDOException $e) {

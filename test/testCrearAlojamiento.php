@@ -7,13 +7,13 @@ $database = new Database();
 $db = $database->getConection();
 
 // Datos de prueba para el nuevo alojamiento
-$nombre = "Hotel Prueba";
+$nombre = "Prince Ones";
 $descripcion = "Un hotel de prueba para propósitos de testing.";
-$ubicacion = "Ciudad de Prueba";
+$ubicacion = "Costa del Sol";
 $precio = 150.00;
 $estado = true; // true para disponible, false para no disponible
 $imagen = "hotel_prueba.jpg";
-$id_tipo_alojamiento = 1; 
+$id_tipo_alojamiento = 6; 
 
 // Instanciar Alojamiento con id_alojamiento nulo (autogenerado)
 $alojamiento = new Alojamiento(null, $nombre, $descripcion, $ubicacion, $precio, $estado, $imagen, $id_tipo_alojamiento);

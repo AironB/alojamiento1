@@ -7,7 +7,7 @@ $database = new Database();
 $db = $database->getConection();
 
 // ID del alojamiento a actualizar
-$id_alojamiento = 1; // Reemplaza con un ID existente
+$id_alojamiento = 9; // Reemplaza con un ID existente
 
 // Nuevo estado
 $nuevo_estado = false; // true para disponible, false para no disponible

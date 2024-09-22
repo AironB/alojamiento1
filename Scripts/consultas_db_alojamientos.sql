@@ -1,4 +1,5 @@
 use alojamientos;
+select * from usuarios
 /* consulta de insercion base INSERT INTO usuarios (administrador, nombre, apellido, email, passwrd) VALUES(?,?,?,?,?);*/
 /* consulta de insercion base INSERT INTO alojamientos (nombre_alojamiento, imagen, descripcion, ubicacion, precio, estado, id_tipo_alojamiento) VALUES (?,?,?,?,?,?,?);*/
 /* editar alojamientos UPDATE alojamientos SET nombre_alojamiento = 'Nuevo Nombre', imagen = 'nueva_imagen.jpg', descripcion = 'Nueva descripción del alojamiento.', ubicacion = 'Nueva ubicación del alojamiento', precio = 250.00, estado = 1, id_tipo_alojamiento = 2  -- Cambiar el tipo de alojamiento (por ejemplo a Hostal) WHERE id_alojamiento = 1;  -- Cambiar este ID por el del alojamiento que quieres editar */

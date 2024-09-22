@@ -1,13 +1,13 @@
-create database alojamientos;
+create database if not exists alojamientos;
 use alojamientos;
 create table usuarios(
-id_usuario int auto_increment primary key,
-administrador boolean default 0,
-nombre varchar(20) not null,
-apellido varchar(20) not null,
-email varchar(100) not null,
-/*Password es una palbra reservada por eso le puse passwrd*/
-passwrd varchar(255) not null);
+	id_usuario int auto_increment primary key,
+	administrador boolean default 0,
+	nombre varchar(20) not null,
+	apellido varchar(20) not null,
+	email varchar(100) not null,
+/*Password es una palabra reservada por eso le puse passwrd*/
+	passwrd varchar(255) not null);
 create table reservaciones(
 id_reservacion int auto_increment primary key,
 id_usuario int,
@@ -28,7 +28,7 @@ estado boolean,
 id_tipo_alojamiento int);
 create table tipo_alojamientos(
 id_tipo_alojamiento int auto_increment primary key,
-nombre varchar(20) not null)
+nombre varchar(20) not null);
 
 INSERT INTO `alojamientos`.`usuarios`
 (`id_usuario`,

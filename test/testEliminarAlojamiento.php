@@ -7,7 +7,7 @@ $database = new Database();
 $db = $database->getConection();
 
 // ID del alojamiento a eliminar
-$id_alojamiento = 10; // Reemplaza con un ID existente
+$id_alojamiento = 11; // Reemplaza con un ID existente
 
 // Instanciar Alojamiento con el ID existente
 $alojamiento = new Alojamiento($id_alojamiento, "", "", "", 0.0, false, "", 0);
