@@ -140,7 +140,7 @@ abstract class Reservacion{
         }    
     }
     // Método abstracto para cancelar la reservación
-    abstract public function cancelarReservacion(): bool;
+    abstract public function cancelarReservacion(PDO $db): bool;
 }
 
 ?>
