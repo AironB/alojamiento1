@@ -1,22 +1,17 @@
 <?php
 
-require 'database/database.php';
+require_once '../Database/Database.php';
+require_once '../Backend/TipoAlojamiento.php';
 
-// Prepare a SELECT statement
 
-$stmt = $pdo->prepare('SELECT * FROM alojamientos');
+require_once '../Backend/Alojamiento.php';
 
-// Execute the statement
+$database = new Database();
 
-$stmt->execute();
+$db  = $database->getConection();
 
-// Fetch all the results
-
-$alojamientos = $stmt->fetchAll();
-
-echo '<pre>
-  var_dump($results);
-</pre>'
+$alojamiento = Alojamiento::MostrarAlojamiento($db);
+$tipoAlojamiento = TipoAlojamiento::obtenerTiposAlojamientos($db);
 
 
 
@@ -34,23 +29,12 @@ echo '<pre>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <!--CSS-->
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="../assets/css/style.css">
 
 
 </head>
 
 <body>
-
-  <!--
-        navbar
-        contenido de el navbar
-        Inicio
-        Alojamientos
-        Contacto
-        log in
-        busqueda
-        categoria
-    -->
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">Navbar</a>
@@ -111,59 +95,29 @@ echo '<pre>
         <h1 class="text-center">Alojamientos</h1>
       </div>
     </div>
-
     <!-- Fila para las tarjetas -->
-    <div class="row">
-      <!-- Tarjeta 1 -->
-      <div class="col-4">
-        <div class="card">
-          <?php foreach ($alojamientos as $alojamiento) : ?>
-            <img src="<?php echo $alojamiento['imagen']; ?>" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title"><?php echo $alojamiento['nombre']; ?></h5>
-              <p class="card-text"><?php echo $alojamiento['descripcion']; ?></p>
-              <p class="card-price"><strong>Price:</strong> $<?php echo $alojamiento['precio']; ?> per night</p>
-              <p class="card-availability"><strong>Availability:</strong> <?php echo $alojamiento['disponibilidad']; ?></p>
-              <a href="reservas.php" class="btn btn-primary">Reservar</a>
-            </div>
-          <?php endforeach; ?>
-        </div>
-      </div>
+     
+  <?php  
+  foreach ($alojamiento as $aloja) { ?>
+  <div class="col-4">
 
-      <!-- Tarjeta 2 -->
-      <!-- <div class="col-4">
-        <div class="card">
-          <img src="https://images.trvl-media.com/lodging/95000000/94950000/94943900/94943837/a5d5e9a6.jpg?impolicy=resizecrop&rw=1200&ra=fit" class="card-img-top" alt="...">
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <p class="card-price"><strong>Price:</strong> $100 per night</p>
-            <p class="card-availability"><strong>Availability:</strong> In Stock</p>
-            <a href="reservas.php" class="btn btn-primary">Reservar</a>
-          </div>
-        </div>
-      </div>
-
-       Tarjeta 3 -
-      <div class="col-4">
-        <div class="card">
-          <img src="https://images.trvl-media.com/lodging/95000000/94950000/94943900/94943837/a5d5e9a6.jpg?impolicy=resizecrop&rw=1200&ra=fit" class="card-img-top" alt="...">
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <p class="card-price"><strong>Price:</strong> $100 per night</p>
-            <p class="card-availability"><strong>Availability:</strong> In Stock</p>
-            <a href="reservas.php" class="btn btn-primary">Reservar</a>
-          </div>
-        </div>
-      </div> -->
-    </div>
+<div class="card">
+  <img src="<?php echo $aloja['imagen']; ?>" class="card-img-top" alt="...">
+  <div class="card-body">
+    <h5 class="card-title"><?php echo $aloja['nombre_alojamiento']; ?></h5>
+    <p class="card-location"><strong>Ubicación:</strong> <?php echo $aloja['ubicacion']; ?></p>
+    <p class="card-text"><?php echo $aloja['descripcion']; ?></p>
+    <p class="card-text"><?php echo $aloja['tipo_alojamiento']; ?></p>
+    <p class="card-price"><strong>Precio:</strong> $<?php echo $aloja['precio']; ?> por noche</p>
+    <p class="card-availability"><strong>Estado:</strong> <?php echo $aloja['estado_alojamiento']; ?></p>
+    <a href="reservas.php" class="btn btn-primary">Reservar</a>
   </div>
+</div>
+</div>
 
+<?php }?>
 
-
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 

@@ -88,7 +88,7 @@ class Alojamiento {
 
     // Métodos para gestionar el alojamiento
     #mostrar Alojamiento
-    public function MostrarAlojamiento(PDO $db): array {
+    public static function MostrarAlojamiento(PDO $db): array {
         //consulta sql para mostrar alojamiento
         try {
             $sql = "SELECT alojamientos.nombre_alojamiento, alojamientos.imagen, alojamientos.descripcion, 
