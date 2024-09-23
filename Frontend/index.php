@@ -2,9 +2,13 @@
 
 require_once '../Database/Database.php';
 require_once '../Backend/TipoAlojamiento.php';
-
-
 require_once '../Backend/Alojamiento.php';
+session_start();
+
+// Simular un usuario con id_usuario = 5
+if (!isset($_SESSION['id_usuario'])) {
+    $_SESSION['id_usuario'] = 5; // Cambia este valor según necesites
+}
 
 $database = new Database();
 
@@ -96,7 +100,7 @@ $tipoAlojamiento = TipoAlojamiento::obtenerTiposAlojamientos($db);
         <!-- Fila para las tarjetas -->
         <?php
         foreach ($alojamiento as $aloja) { ?>
-          <div class="col-4">
+          <div class="col-4 pb-3 pt-3">
             <div class="card">
               <img src="<?php echo $aloja['imagen']; ?>" class="card-img-top" alt="...">
               <div class="card-body">
@@ -106,7 +110,7 @@ $tipoAlojamiento = TipoAlojamiento::obtenerTiposAlojamientos($db);
                 <p class="card-text"><?php echo $aloja['tipo_alojamiento']; ?></p>
                 <p class="card-price"><strong>Precio:</strong> $<?php echo $aloja['precio']; ?> por noche</p>
                 <p class="card-availability"><strong>Estado:</strong> <?php echo $aloja['estado_alojamiento']; ?></p>
-                <a href="reservas.php" class="btn btn-primary">Reservar</a>
+                <a href="reservas.php?id=<?php echo $aloja['id_alojamiento']; ?>" class="btn btn-primary">Reservar</a>
               </div>
             </div>
           </div>

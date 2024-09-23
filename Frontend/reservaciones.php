@@ -30,9 +30,6 @@
 </head>
 <body>
     <!-- regresar a inicio-->
-     
-
-
     <div class="container mt-5">
         <table class="table table-striped">
             <thead>
