@@ -1,5 +1,6 @@
 <?php
-class Cliente extends Usuario {
+require_once '../Backend/Usuario.php';
+class Cliente extends Usuario{
     public function __construct(
         ?int $id_usuario,
         string $nombre,
@@ -8,6 +9,35 @@ class Cliente extends Usuario {
         string $password
     ) {
         parent::__construct($id_usuario, $nombre, $apellido, $email, $password, false); // admin = false
+    }
+    // Metodo estatico para mostrar usuarios por id_usuario
+    public static function mostrarUsuarioPorId(PDO $db, int $id_usuario): ?array {
+        try {
+            // Consulta SQL para seleccionar un usuario por id_usuario
+            $sql = 'SELECT id_usuario, nombre, apellido, email, administrador 
+                    FROM usuarios 
+                    WHERE id_usuario = :id_usuario';
+
+            // Preparar la consulta
+            $stmt = $db->prepare($sql);
+
+            // Ejecutar la consulta con el id_usuario
+            $stmt->execute(['id_usuario' => $id_usuario]);
+
+            // Obtener el resultado
+            $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Si no se encuentra el usuario, retornar null
+            if (!$usuario) {
+                return null;
+            }
+
+            // Retornar el usuario como un arreglo
+            return $usuario;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
     }
 
     // Implementación del método abstracto crearUsuario

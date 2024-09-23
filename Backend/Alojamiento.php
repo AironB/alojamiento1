@@ -91,7 +91,7 @@ class Alojamiento {
     public static function MostrarAlojamiento(PDO $db): array {
         //consulta sql para mostrar alojamiento
         try {
-            $sql = "SELECT alojamientos.nombre_alojamiento, alojamientos.imagen, alojamientos.descripcion, 
+            $sql = "SELECT alojamientos.id_alojamiento, alojamientos.nombre_alojamiento, alojamientos.imagen, alojamientos.descripcion, 
                         alojamientos.ubicacion, alojamientos.precio, 
                         CASE WHEN alojamientos.estado = 1 THEN 'Alojamiento disponible' 
                         ELSE 'Alojamiento no disponible' END AS estado_alojamiento, 
@@ -99,6 +99,28 @@ class Alojamiento {
                 FROM alojamientos
                 INNER JOIN tipo_alojamientos 
                 ON alojamientos.id_tipo_alojamiento = tipo_alojamientos.id_tipo_alojamiento";
+                //Ejecutar la consulta
+                $stmt = $db->query($sql);
+                //Obtener los resultados
+                $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return $resultados;
+        } catch (PDOException $e) {
+            echo "Error: ". $e->getMessage();
+            return [];
+        }
+    }
+    #mostrar Alojamiento por ID
+    public static function MostrarAlojamientoPorId(PDO $db, $id_alojamiento): array {
+        //consulta sql para mostrar alojamiento
+        try {
+            $sql = "SELECT alojamientos.id_alojamiento, alojamientos.nombre_alojamiento, alojamientos.imagen, alojamientos.descripcion, 
+                        alojamientos.ubicacion, alojamientos.precio, 
+                        CASE WHEN alojamientos.estado = 1 THEN 'Alojamiento disponible' 
+                        ELSE 'Alojamiento no disponible' END AS estado_alojamiento, 
+                        tipo_alojamientos.nombre AS tipo_alojamiento
+                FROM alojamientos
+                INNER JOIN tipo_alojamientos 
+                ON alojamientos.id_tipo_alojamiento = tipo_alojamientos.id_tipo_alojamiento WHERE alojamientos.id_tipo_alojamiento = $id_alojamiento";
                 //Ejecutar la consulta
                 $stmt = $db->query($sql);
                 //Obtener los resultados
