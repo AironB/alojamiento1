@@ -77,7 +77,7 @@ $tipoAlojamiento = TipoAlojamiento::obtenerTiposAlojamientos($db);
 
         <div class="login-container">
           <div class="d-flex">
-            <a href="signUp.php" class="btn btn-primary">Log in</a>
+          <a href="logIn2.php" class="btn btn-danger ms-auto">Log out</a>
           </div>
         </div>
 

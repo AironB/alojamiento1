@@ -1,5 +1,5 @@
 <?php
-class Cliente extends Usuario{
+class Cliente extends Usuario {
     public function __construct(
         ?int $id_usuario,
         string $nombre,
@@ -14,11 +14,11 @@ class Cliente extends Usuario{
     public function crearUsuario(PDO $db): bool {
         try {
             // Encriptar la contraseña
-            $hashed_password = $this->getPassword();
+            $hashed_password = password_hash($this->getPassword(), PASSWORD_DEFAULT);
 
             // Consulta SQL para insertar usuarios clientes en la tabla 'usuarios'
-            $sql = 'INSERT INTO usuarios (nombre, apellido, email, passwrd, administrador) 
-                    VALUES (:nombre, :apellido, :email, :passwrd, :administrador)';
+            $sql = 'INSERT INTO usuarios (nombre, apellido, email, password, administrador) 
+                    VALUES (:nombre, :apellido, :email, :password, :administrador)';
 
             // Preparar la consulta
             $stmt = $db->prepare($sql);
@@ -28,7 +28,7 @@ class Cliente extends Usuario{
                 'nombre' => $this->getNombre(),
                 'apellido' => $this->getApellido(),
                 'email' => $this->getEmail(),
-                'passwrd' => $hashed_password,
+                'password' => $hashed_password,
                 'administrador' => 0 // Este campo es 0 para cliente
             ]);
         } catch (PDOException $e) {
@@ -36,6 +36,5 @@ class Cliente extends Usuario{
             return false;
         }
     }
-
 }
 ?>

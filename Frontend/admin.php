@@ -1,3 +1,16 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    header('Location: logIn2.php');
+    exit;
+}
+
+echo "<h1>Welcome, Admin</h1>";
+echo "<p>Name: " . $_SESSION['nombre'] . " " . $_SESSION['apellido'] . "</p>";
+echo "<p>Email: " . $_SESSION['email'] . "</p>";
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,7 +27,7 @@
     <!-- Mensaje de administrador -->
     <div class="admin-message d-flex justify-content-center align-items-center">
         <span>Soy Administrador</span>
-        <a href="logIn.php" class="btn btn-danger ms-auto">Log out</a>
+        <a href="logIn2.php" class="btn btn-danger ms-auto">Log out</a>
     </div>
 
     <div class="container">
