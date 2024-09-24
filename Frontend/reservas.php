@@ -1,7 +1,6 @@
 <?php
 
 require_once '../Database/Database.php';
-require_once '../Backend/TipoAlojamiento.php';
 require_once '../Backend/Alojamiento.php';
 require_once '../Backend/Cliente.php';
 session_start();
@@ -9,31 +8,33 @@ session_start();
 
 
 $database = new Database();
-
 $db  = $database->getConection();
 
-$tipoAlojamiento = TipoAlojamiento::obtenerTiposAlojamientos($db);
 
-$alojamiento = null;
-$cliente = null;
-//obtener el id desde la url
-if (isset($_GET['id'])) {
-    $id_alojamiento = intval($_GET['id']);
-    //obtener la informacion del alojamiento por el id
-    $alojamiento = Alojamiento::MostrarAlojamientoPorId($db, $id_alojamiento);
-}else{
-    echo 'No se ha seleccionado ningun alojamiento';
-    exit;
+// Verificar si el cliente está autenticado
+if (!isset($_SESSION['user_id'])) {
+    header('Location: logIn2.php');
+    exit();
 }
-// Obtener el ID del usuario desde la sesión
-if (isset($_SESSION['id_usuario'])) {
-    $id_usuario = intval($_SESSION['id_usuario']);
 
-    // Utilizar la clase Cliente para obtener la información del usuario
-    $cliente = Cliente::mostrarUsuarioPorId($db, $id_usuario);
-} else {
-    echo "No hay un usuario en sesión.";
-    exit;
+// Obtener datos del usuario autenticado
+$id_usuario = $_SESSION['user_id'];
+$usuario = Cliente::mostrarUsuarioPorId($db, $id_usuario);
+
+
+// Verificar si se ha recibido el id del alojamiento
+if (!isset($_GET['id_alojamiento'])) {
+    echo "Error: No se ha especificado un alojamiento.";
+    exit();
+}
+
+$id_alojamiento = (int)$_GET['id_alojamiento'];
+$alojamiento = Alojamiento::MostrarAlojamientoPorId($db, $id_alojamiento);
+
+// Verificar si se ha encontrado el alojamiento
+if (!$alojamiento) {
+    echo "Error: El alojamiento no fue encontrado.";
+    exit();
 }
 
 // Manejar la solicitud POST para crear la reservación
@@ -52,11 +53,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Crear una instancia de ReservacionCliente
         require_once '../Backend/ReservacionCliente.php'; // Asegúrate de tener esta clase
 
-        $reservacion = new ReservacionCliente(null,$id_usuario,$id_alojamiento,$fecha_entrada,$fecha_salida,$cantidad_personas,$comentarios,$estado);
+        $reservacion = new ReservacionCliente(null, $id_usuario, $id_alojamiento, new DateTime($fecha_entrada), new DateTime($fecha_salida), $cantidad_personas, $comentarios, $estado);
 
         // Crear la reservación
         if ($reservacion->crearReservacion($db)) {
             echo "<div class='alert alert-success'>Reservación creada exitosamente.</div>";
+            header('Location: index.php');
         } else {
             echo "<div class='alert alert-danger'>Hubo un error al crear la reservación.</div>";
         }
@@ -70,6 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -80,6 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
     <!-- Navbar -->
@@ -123,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <li><a class="dropdown-item" href="reservaciones.php">Ver Reservaciones</a></li>
                         </ul>
                     </div>
-                    
+
                     <!-- Log out -->
                     <a href="logIn2.php" class="btn btn-danger">Log out</a>
                 </div>
@@ -136,19 +140,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- Contenedor del formulario -->
             <div class="col-md-7">
                 <div class="form-container mx-auto">
-                    <form action="reservas.php?id=<?php echo htmlspecialchars($id_alojamiento); ?>" method="post" class="mt-4">
-                        <div class="mb-3">
-                            <label for="nombre" class="form-label">Nombre:</label>
-                            <input type="text" class="form-control" name="nombre" id="nombre" value="<?php echo htmlspecialchars($cliente['nombre'] ?? ''); ?>" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label for="apellido" class="form-label">Apellido:</label>
-                            <input type="text" class="form-control" name="apellido" id="apellido" value="<?php echo htmlspecialchars($cliente['apellido'] ?? ''); ?>" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email:</label>
-                            <input type="email" class="form-control" name="email" id="email" value="<?php echo htmlspecialchars($cliente['email'] ?? ''); ?>" readonly>
-                        </div>
+                    <!-- Mostrar información del cliente -->
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" value="<?php echo $usuario['nombre']; ?>" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="apellido" class="form-label">Apellido</label>
+                        <input type="text" class="form-control" id="apellido" value="<?php echo $usuario['apellido']; ?>" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" value="<?php echo $usuario['email']; ?>" readonly>
+                    </div>
+                    <form method="POST">
                         <div class="mb-3">
                             <label for="fecha_entrada" class="form-label">Fecha de Entrada:</label>
                             <input type="date" class="form-control" name="fecha_entrada" id="fecha_entrada" required>
@@ -165,9 +170,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <label for="comentarios" class="form-label">Comentarios:</label>
                             <textarea name="comentarios" class="form-control" id="comentarios" rows="4"></textarea>
                         </div>
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Reservar</button>
-                        </div>
+                        <input type="hidden" name="id_usuario" value="<?php echo $usuario['id_usuario']; ?>">
+                        <input type="hidden" name="id_alojamiento" value="<?php echo $alojamiento['id_alojamiento']; ?>">
+                        <button type="submit" class="btn btn-primary mt-3">Confirmar Reserva</button>
                     </form>
                 </div>
             </div>
@@ -177,10 +182,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="card mb-4" style="width: 100%;">
                     <img src="<?php echo htmlspecialchars($alojamiento['imagen'] ?? 'https://via.placeholder.com/150'); ?>" class="card-img-top" alt="Imagen de <?php echo htmlspecialchars($alojamiento['nombre_alojamiento'] ?? 'Alojamiento'); ?>">
                     <div class="card-body">
-                        <h5 class="card-title"><?php echo htmlspecialchars($alojamiento['nombre_alojamiento'] ?? 'Nombre no disponible'); ?></h5>
-                        <p class="card-text"><?php echo htmlspecialchars($alojamiento['descripcion'] ?? 'Descripción no disponible'); ?></p>
-                        <p class="card-price"><strong>Precio:</strong> $<?php echo htmlspecialchars($alojamiento['precio'] ?? '0'); ?> por noche</p>
-                        <p class="card-availability"><strong>Disponibilidad:</strong> <?php echo htmlspecialchars($alojamiento['estado_alojamiento'] ?? 'No disponible'); ?></p>
+                        <h5 class="card-title"><?php echo htmlspecialchars($alojamiento['nombre_alojamiento']); ?></h5>
+                        <p class="card-location"><strong>Ubicación:</strong> <?php echo $alojamiento['ubicacion']; ?></p>
+                        <p class="card-text"><?php echo htmlspecialchars($alojamiento['descripcion']); ?></p>
+                        <p class="card-price"><strong>Precio:</strong> $<?php echo htmlspecialchars($alojamiento['precio']); ?> por noche</p>
+                        <p class="card-availability"><strong>Disponibilidad:</strong> <?php echo htmlspecialchars($alojamiento['estado_alojamiento']); ?></p>
                         <!-- No necesitas otro botón "Reservar" aquí ya que estás en la página de reservación -->
                     </div>
                 </div>

@@ -31,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             exit;
         } else {
             $error_message = 'Invalid email or password';
+            error_log("Error: No se pudo autenticar al usuario.");
         }
     }
 }

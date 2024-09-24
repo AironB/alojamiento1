@@ -23,7 +23,7 @@ abstract class Usuario{
         $this->setNombre($nombre);
         $this->setApellido($apellido);
         $this->setEmail($email);
-        $this->cifrarPassword($password);
+        $this->setPassword($password);
         $this->setAdmin($admin);
     }
 
@@ -71,10 +71,15 @@ abstract class Usuario{
         return $this->password;
     }
 
-    protected function cifrarPassword(string $password): void {
-        // Cifrar la contraseña usando password_hash
-        $this->password =password_hash($password, PASSWORD_DEFAULT);
+    public function setPassword(string $password): void {
+        // Validar que la contraseña tenga al menos 8 caracteres, una letra mayúscula, una letra minúscula, un número y un carácter especial
+        $this->password = $password;
     }
+
+    // protected function cifrarPassword(string $password): void {
+         // Cifrar la contraseña usando password_hash
+    //     $this->password =password_hash($password, PASSWORD_DEFAULT);
+    // }
 
     public function isAdmin(): bool {
         return $this->admin;

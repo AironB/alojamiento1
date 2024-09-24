@@ -9,7 +9,8 @@ $auth = new Autenticacion();
 if (isset($_GET['reservar'])) {
   if (!$auth->estaAutenticado()) {
     //redirigir a login si no esta autenticado
-    header('Location: logIn2.php?redirect=' . urlencode($_SERVER['REQUEST_URI']));
+    //header('Location: logIn2.php?redirect=' . urlencode($_SERVER['REQUEST_URI']));
+    header('Location: logIn2.php');
     exit();
     //si esta autenticado continuar con la reservation
   }
@@ -55,14 +56,14 @@ $alojamiento = Alojamiento::MostrarAlojamiento($db);
               <a class="nav-link active" aria-current="page" href="#">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Link</a>
+              <a class="nav-link" href="reservacionesCliente.php">Reservaciones</a>
             </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Dropdown
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">sxs</a></li>
                 <li><a class="dropdown-item" href="#">Another action</a></li>
                 <li>
                   <hr class="dropdown-divider">
@@ -123,7 +124,7 @@ $alojamiento = Alojamiento::MostrarAlojamiento($db);
               <p class="card-text"><?php echo $aloja['tipo_alojamiento']; ?></p>
               <p class="card-price"><strong>Precio:</strong> $<?php echo $aloja['precio']; ?> por noche</p>
               <p class="card-availability"><strong>Estado:</strong> <?php echo $aloja['estado_alojamiento']; ?></p>
-              <a href="?reservar=<?php echo $aloja['id_alojamiento']; ?>" class="btn btn-primary">Reservar</a>
+              <a href="reservas.php?id_alojamiento=<?php echo $aloja['id_alojamiento']; ?>" class="btn btn-primary">Reservar</a>
             </div>
           </div>
         </div>

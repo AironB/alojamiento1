@@ -98,7 +98,7 @@ abstract class Reservacion{
     #mostrar reservaciones segun ID usuario
     public static function mostrarReservacionesPorUsuario(PDO $db, int $id_usuario):array {
         try{
-            $sql = "SELECT usuarios.nombre as nombre_cliente, usuarios.apellido, usuarios.email, alojamientos.imagen, alojamientos.nombre_alojamiento,alojamientos.ubicacion, tipo_alojamientos.nombre as tipo_alojamiento, alojamientos.precio, reservaciones.fecha_entrada, reservaciones.fecha_salida, reservaciones.cantidad_personas, reservaciones.comentarios,
+            $sql = "SELECT reservaciones.id_reservacion, usuarios.nombre as nombre_cliente, usuarios.apellido, usuarios.email, alojamientos.nombre_alojamiento,alojamientos.ubicacion, tipo_alojamientos.nombre as tipo_alojamiento, alojamientos.precio, reservaciones.fecha_entrada, reservaciones.fecha_salida, reservaciones.cantidad_personas, reservaciones.comentarios,
                     CASE WHEN   reservaciones.estado = 1 THEN   'Reservación Confirmada' ELSE 'Reservación Cancelada' END AS estado_reservacion
                     FROM reservaciones 
                     INNER JOIN usuarios on reservaciones.id_usuario = usuarios.id_usuario 
