@@ -1,15 +1,4 @@
-<?php
-session_start();
 
-if (!isset($_SESSION['user_id'])) {
-    header('Location: logIn2.php');
-    exit;
-}
-
-echo "<h1>Welcome, Admin</h1>";
-echo "<p>Name: " . $_SESSION['nombre'] . " " . $_SESSION['apellido'] . "</p>";
-echo "<p>Email: " . $_SESSION['email'] . "</p>";
-?>
 
 <!DOCTYPE html>
 <html lang="en">
