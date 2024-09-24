@@ -6,10 +6,7 @@ require_once '../Backend/Alojamiento.php';
 require_once '../Backend/Cliente.php';
 session_start();
 
-// Simular un usuario con id_usuario = 1
-if (!isset($_SESSION['id_usuario'])) {
-    $_SESSION['id_usuario'] = 5; // Cambia este valor según necesites
-}
+
 
 $database = new Database();
 
@@ -128,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     
                     <!-- Log out -->
-                    <a href="logIn.html" class="btn btn-danger">Log out</a>
+                    <a href="logIn2.php" class="btn btn-danger">Log out</a>
                 </div>
             </div>
         </div>

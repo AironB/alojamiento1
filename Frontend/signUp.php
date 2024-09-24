@@ -16,8 +16,12 @@
       <h2 class="text-center mb-4">Create an Account</h2>
       <form action="register.php" method="POST">
         <div class="mb-3">
-          <label for="username" class="form-label">Username</label>
+          <label for="username" class="form-label">Nombre del Usuario</label>
           <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
+        </div>
+        <div class="mb-3">
+          <label for="apellido" class="form-label">Apellido del Usuario</label>
+          <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Enter your apellido" required>
         </div>
         <div class="mb-3">
           <label for="email" class="form-label">Email address</label>

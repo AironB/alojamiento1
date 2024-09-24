@@ -9,17 +9,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    $auth = new Autenticacion();
+    
     $database = new Database();
     $db = $database->getConection();
+    $auth = new Autenticacion(); //instanciar autenticacion
 
-    $is_admin = $auth->login($db, $email, $password);
+    $esta_autenticado = $auth->login($db, $email, $password);
 
-    if ($is_admin !== null) {
-        if ($is_admin == 1) {
+    if ($esta_autenticado) {
+        if ($_SESSION['is_admin'] == 1) {
             header('Location: admin.php');
         } else {
-            header('Location: index.php');
+            $redirect_url = isset($_GET['redirect']) ? $_GET['redirect'] : 'index.php';
+            header("Location: $redirect_url");
         }
         exit;
     } else {
