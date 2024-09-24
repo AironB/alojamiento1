@@ -1,27 +1,4 @@
-<?php
-session_start();
-require_once '../Backend/Autenticacion.php';
 
-$auth = new Autenticacion();
-
-if (!$auth->estaAutenticado() || !$auth->isAdmin()) {
-    // Si no está autenticado o no es administrador, redirigir a la página de login
-    header('Location: logIn2.php');
-    exit;
-}
-
-
-// session_start();
-
-// if (!isset($_SESSION['user_id'])) {
-//     header('Location: logIn2.php');
-//     exit;
-// }
-
-// echo "<h1>Welcome, Admin</h1>";
-// echo "<p>Name: " . $_SESSION['nombre'] . " " . $_SESSION['apellido'] . "</p>";
-// echo "<p>Email: " . $_SESSION['email'] . "</p>";
-?>
 
 <!DOCTYPE html>
 <html lang="en">
