@@ -6,7 +6,7 @@ require_once '../Backend/Autenticacion.php';
 $error_message = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $email = $_POST['email'];
+    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
     $password = $_POST['password'];
 
     $auth = new Autenticacion();
@@ -23,7 +23,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         exit;
     } else {
-        $error_message = 'Invalid email or password';
+        $database = new Database();
+        $db = $database->getConection();
+        $auth = new Autenticacion();
+
+        $esta_autenticado = $auth->login($db, $email, $password);
+
+        if ($esta_autenticado) {
+            // // Store user role in session
+            // $_SESSION['is_admin'] = $esta_autenticado;
+
+            if ($_SESSION['is_admin'] == 1) {
+                header('Location: admin.php');
+            } else {
+                header('Location: index.php');
+            }
+            exit;
+        } else {
+            $error_message = 'Invalid email or password';
+            error_log("Error: No se pudo autenticar al usuario.");
+        }
     }
 }
 ?>
@@ -34,8 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log In</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="container d-flex justify-content-center align-items-center vh-100">
@@ -47,21 +65,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <input type="email" name="email" class="form-control" id="email" placeholder="Enter your email" required>
                 </div>
                 <div class="mb-3">
-                <input type="password" name="password" class="form-control" id="password" placeholder="Enter your password" required>
-
+                    <input type="password" name="password" class="form-control" id="password" placeholder="Enter your password" required>
                 </div>
-                <button type="submit" name="submit" class="btn btn-primary w-100">Log In</button>
+                <button type="submit" class="btn btn-primary w-100">Log In</button>
                 <div class="mt-3 text-center">
                     <span>Don't have an account?</span> <a href="signUp.php">Sign Up</a>
                 </div>
                 <?php if (!empty($error_message)): ?>
                     <div class="alert alert-danger mt-3" role="alert">
-                        <?php echo $error_message; ?>
+                        <?php echo htmlspecialchars($error_message); ?>
                     </div>
                 <?php endif; ?>
             </form>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

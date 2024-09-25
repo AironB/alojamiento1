@@ -1,6 +1,5 @@
-<?php
-session_start();
 
+<<<<<<< HEAD
 if (!isset($_SESSION['user_id'])) {
     header('Location: admin2.php');
     exit;
@@ -11,6 +10,8 @@ echo "<p>Name: " . $_SESSION['nombre'] . " " . $_SESSION['apellido'] . "</p>";
 echo "<p>Email: " . $_SESSION['email'] . "</p>";
 
 ?>
+=======
+>>>>>>> e36835a0e94d36035b3d0780c9c28fd426f4d1e6
 
 <!DOCTYPE html>
 <html lang="en">

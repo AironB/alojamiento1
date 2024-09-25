@@ -1,21 +1,25 @@
 <?php
-
+session_start();
 require_once '../Database/Database.php';
+require_once '../Backend/Autenticacion.php';
 require_once '../Backend/TipoAlojamiento.php';
 require_once '../Backend/Alojamiento.php';
-session_start();
 
-// Simular un usuario con id_usuario = 5
-if (!isset($_SESSION['id_usuario'])) {
-    $_SESSION['id_usuario'] = 5; // Cambia este valor según necesites
+$auth = new Autenticacion();
+if (isset($_GET['reservar'])) {
+  if (!$auth->estaAutenticado()) {
+    //redirigir a login si no esta autenticado
+    //header('Location: logIn2.php?redirect=' . urlencode($_SERVER['REQUEST_URI']));
+    header('Location: logIn2.php');
+    exit();
+    //si esta autenticado continuar con la reservation
+  }
 }
-
 $database = new Database();
 
 $db  = $database->getConection();
 
 $alojamiento = Alojamiento::MostrarAlojamiento($db);
-$tipoAlojamiento = TipoAlojamiento::obtenerTiposAlojamientos($db);
 
 
 
@@ -52,14 +56,14 @@ $tipoAlojamiento = TipoAlojamiento::obtenerTiposAlojamientos($db);
               <a class="nav-link active" aria-current="page" href="#">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Link</a>
+              <a class="nav-link" href="reservacionesCliente.php">Reservaciones</a>
             </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Dropdown
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">sxs</a></li>
                 <li><a class="dropdown-item" href="#">Another action</a></li>
                 <li>
                   <hr class="dropdown-divider">
@@ -80,15 +84,23 @@ $tipoAlojamiento = TipoAlojamiento::obtenerTiposAlojamientos($db);
             </form>
           </div>
 
-        <div class="login-container">
-          <div class="d-flex">
-          <a href="logIn2.php" class="btn btn-danger ms-auto">Log out</a>
+          <div class="login-container">
+            <div class="d-flex">
+              <?php
+              if ($auth->estaAutenticado()) {
+                // Si el usuario está autenticado, mostrar "Cerrar sesión"
+                echo '<a href="logout.php" class="btn btn-danger ms-auto">Cerrar Sesión</a>';
+              } else {
+                // Si no está autenticado, mostrar "Iniciar sesión"
+                echo '<a href="logIn2.php" class="btn btn-danger ms-auto">Iniciar Sesión</a>';
+              }
+              ?>
+            </div>
           </div>
+
+
+
         </div>
-
-
-
-      </div>
     </nav>
   </div>
 
@@ -99,27 +111,27 @@ $tipoAlojamiento = TipoAlojamiento::obtenerTiposAlojamientos($db);
       <h1 class="text-center">Alojamientos</h1>
     </div>
     <div class="row">
-        <!-- Fila para las tarjetas -->
-        <?php
-        foreach ($alojamiento as $aloja) { ?>
-          <div class="col-4 pb-3 pt-3">
-            <div class="card">
-              <img src="<?php echo $aloja['imagen']; ?>" class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title"><?php echo $aloja['nombre_alojamiento']; ?></h5>
-                <p class="card-location"><strong>Ubicación:</strong> <?php echo $aloja['ubicacion']; ?></p>
-                <p class="card-text"><?php echo $aloja['descripcion']; ?></p>
-                <p class="card-text"><?php echo $aloja['tipo_alojamiento']; ?></p>
-                <p class="card-price"><strong>Precio:</strong> $<?php echo $aloja['precio']; ?> por noche</p>
-                <p class="card-availability"><strong>Estado:</strong> <?php echo $aloja['estado_alojamiento']; ?></p>
-                <a href="reservas.php?id=<?php echo $aloja['id_alojamiento']; ?>" class="btn btn-primary">Reservar</a>
-              </div>
+      <!-- Fila para las tarjetas -->
+      <?php
+      foreach ($alojamiento as $aloja) { ?>
+        <div class="col-4 pb-3 pt-3">
+          <div class="card">
+            <img src="<?php echo $aloja['imagen']; ?>" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title"><?php echo $aloja['nombre_alojamiento']; ?></h5>
+              <p class="card-location"><strong>Ubicación:</strong> <?php echo $aloja['ubicacion']; ?></p>
+              <p class="card-text"><?php echo $aloja['descripcion']; ?></p>
+              <p class="card-text"><?php echo $aloja['tipo_alojamiento']; ?></p>
+              <p class="card-price"><strong>Precio:</strong> $<?php echo $aloja['precio']; ?> por noche</p>
+              <p class="card-availability"><strong>Estado:</strong> <?php echo $aloja['estado_alojamiento']; ?></p>
+              <a href="reservas.php?id_alojamiento=<?php echo $aloja['id_alojamiento']; ?>" class="btn btn-primary">Reservar</a>
             </div>
           </div>
-        <?php } ?>
+        </div>
+      <?php } ?>
     </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 
