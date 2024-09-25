@@ -104,7 +104,7 @@ abstract class Reservacion{
                     INNER JOIN usuarios on reservaciones.id_usuario = usuarios.id_usuario 
                     INNER JOIN alojamientos on reservaciones.id_alojamiento = alojamientos.id_alojamiento
                     INNER JOIN tipo_alojamientos on alojamientos.id_tipo_alojamiento = tipo_alojamientos.id_tipo_alojamiento
-                    WHERE reservaciones.id_usuario = :id_usuario";
+                    WHERE reservaciones.id_usuario = :id_usuario AND reservaciones.estado = true";
                     // preparar la consulta
                     $stmt = $db->prepare($sql);
                     $stmt->bindParam(':id_usuario',$id_usuario, PDO::PARAM_INT);

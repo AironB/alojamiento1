@@ -1,20 +1,6 @@
 <?php
-session_start();
-require_once '../Database/Database.php';
-require_once '../Backend/ReservacionCliente.php';
-require_once '../Backend/Autenticacion.php';
-$auth = new Autenticacion();
-// Obtener datos del usuario autenticado
-$id_usuario = $_SESSION['user_id'];
-
-// Conexión a la base de datos
-$database = new Database();
-$db = $database->getConection();
-
-// Obtener las reservaciones del usuario actual del sistema
-$reservaciones = ReservacionCliente::MostrarReservacionesPorUsuario($db, $id_usuario);
+    include '../Controller/reservacionesClientes.php'
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -24,11 +10,13 @@ $reservaciones = ReservacionCliente::MostrarReservacionesPorUsuario($db, $id_usu
     <title>Mis Reservaciones</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-    <div class="container">
+<?php include '../Frontend/Layout/Navbar.php'?>
+    <div class="container mt-5">
         <h2>Mis Reservaciones</h2>
 
         <?php if (!empty($reservaciones)) { ?>
@@ -53,7 +41,8 @@ $reservaciones = ReservacionCliente::MostrarReservacionesPorUsuario($db, $id_usu
                             <td><?php echo htmlspecialchars($reservacion['comentarios']); ?></td>
                             <td>
                                 <a href='editar_reservacion.php?id_reservacion=<?php echo urlencode($reservacion['id_reservacion']); ?>' class="btn btn-primary btn-sm">Editar</a>
-                                <a href='cancelar_reservacion.php?id_reservacion=<?php echo urlencode($reservacion['id_reservacion']); ?>' class="btn btn-danger btn-sm">Cancelar</a>
+                                <a href="#" class="btn btn-danger btn-sm" onclick="confirmCancel(<?php echo $reservacion['id_reservacion']; ?>)">Cancelar</a>
+                            </td>
                             </td>
                         </tr>
                     <?php } ?>
@@ -63,7 +52,51 @@ $reservaciones = ReservacionCliente::MostrarReservacionesPorUsuario($db, $id_usu
             <p>No tienes reservaciones.</p>
         <?php } ?>
     </div>
+    <script>
+        function confirmCancel(id_reservacion) {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "No podrás revertir esta acción",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, cancelar',
+        cancelButtonText: 'No, mantener'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Realizar la solicitud al servidor para cancelar la reservación
+            fetch(`../Controller/cancelar_reservacion.php?id_reservacion=${id_reservacion}`, {
+                    method: 'GET'
+                }).then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire(
+                            'Cancelada',
+                            'Tu reservación ha sido cancelada.',
+                            'success'
+                        ).then(() => {
+                            location.reload(); // Recargar la página para reflejar los cambios
+                        });
+                    } else {
+                        Swal.fire(
+                            'Error',
+                            'Hubo un problema al cancelar la reservación.',
+                            'error'
+                        );
+                    }
+                }).catch(error => {
+                    Swal.fire(
+                        'Error',
+                        'Ocurrió un error en la solicitud.',
+                        'error'
+                    );
+                });
+        }
+    });
+}
 
+    </script>
 </body>
 
 </html>

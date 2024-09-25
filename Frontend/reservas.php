@@ -1,75 +1,4 @@
-<?php
-
-require_once '../Database/Database.php';
-require_once '../Backend/Alojamiento.php';
-require_once '../Backend/Cliente.php';
-session_start();
-
-
-
-$database = new Database();
-$db  = $database->getConection();
-
-
-// Verificar si el cliente está autenticado
-if (!isset($_SESSION['user_id'])) {
-    header('Location: logIn2.php');
-    exit();
-}
-
-// Obtener datos del usuario autenticado
-$id_usuario = $_SESSION['user_id'];
-$usuario = Cliente::mostrarUsuarioPorId($db, $id_usuario);
-
-
-// Verificar si se ha recibido el id del alojamiento
-if (!isset($_GET['id_alojamiento'])) {
-    echo "Error: No se ha especificado un alojamiento.";
-    exit();
-}
-
-$id_alojamiento = (int)$_GET['id_alojamiento'];
-$alojamiento = Alojamiento::MostrarAlojamientoPorId($db, $id_alojamiento);
-
-// Verificar si se ha encontrado el alojamiento
-if (!$alojamiento) {
-    echo "Error: El alojamiento no fue encontrado.";
-    exit();
-}
-
-// Manejar la solicitud POST para crear la reservación
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Obtener datos del formulario
-    $fecha_entrada = $_POST['fecha_entrada'] ?? null;
-    $fecha_salida = $_POST['fecha_salida'] ?? null;
-    $cantidad_personas = intval($_POST['cantidad_personas'] ?? 1);
-    $comentarios = $_POST['comentarios'] ?? '';
-    $estado = true;
-    if ($cantidad_personas < 1) {
-        $errors[] = "Debe haber al menos una persona.";
-    }
-
-    if (empty($errors)) {
-        // Crear una instancia de ReservacionCliente
-        require_once '../Backend/ReservacionCliente.php'; // Asegúrate de tener esta clase
-
-        $reservacion = new ReservacionCliente(null, $id_usuario, $id_alojamiento, new DateTime($fecha_entrada), new DateTime($fecha_salida), $cantidad_personas, $comentarios, $estado);
-
-        // Crear la reservación
-        if ($reservacion->crearReservacion($db)) {
-            echo "<div class='alert alert-success'>Reservación creada exitosamente.</div>";
-            header('Location: index.php');
-        } else {
-            echo "<div class='alert alert-danger'>Hubo un error al crear la reservación.</div>";
-        }
-    } else {
-        foreach ($errors as $error) {
-            echo "<div class='alert alert-danger'>$error</div>";
-        }
-    }
-}
-
-?>
+<?php include '../Controller/reservasCliente.php'?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -81,60 +10,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!--CSS-->
 
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
-
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Navbar</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Alojamientos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Contacto</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="login.html">Log in</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Busqueda</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Categoria</a>
-                    </li>
-                </ul>
-                <div class="d-flex align-items-center ms-auto">
-                    <!-- Lista Reservaciones -->
-                    <div class="dropdown me-3">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            Reservaciones
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li><a class="dropdown-item" href="index.html">Nueva Reservación</a></li>
-                            <li><a class="dropdown-item" href="reservaciones.php">Ver Reservaciones</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Log out -->
-                    <a href="logIn2.php" class="btn btn-danger">Log out</a>
-                </div>
-            </div>
-        </div>
-    </nav>
-
     <div class="container mt-5">
         <div class="row">
             <!-- Contenedor del formulario -->
@@ -173,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <input type="hidden" name="id_usuario" value="<?php echo $usuario['id_usuario']; ?>">
                         <input type="hidden" name="id_alojamiento" value="<?php echo $alojamiento['id_alojamiento']; ?>">
                         <button type="submit" class="btn btn-primary mt-3">Confirmar Reserva</button>
+                        <a href="index.php" class="btn btn-warning mt-3">Cancelar</a>
                     </form>
                 </div>
             </div>

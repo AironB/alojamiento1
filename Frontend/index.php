@@ -1,28 +1,5 @@
 <?php
-session_start();
-require_once '../Database/Database.php';
-require_once '../Backend/Autenticacion.php';
-require_once '../Backend/TipoAlojamiento.php';
-require_once '../Backend/Alojamiento.php';
-
-$auth = new Autenticacion();
-if (isset($_GET['reservar'])) {
-  if (!$auth->estaAutenticado()) {
-    //redirigir a login si no esta autenticado
-    //header('Location: logIn2.php?redirect=' . urlencode($_SERVER['REQUEST_URI']));
-    header('Location: logIn2.php');
-    exit();
-    //si esta autenticado continuar con la reservation
-  }
-}
-$database = new Database();
-
-$db  = $database->getConection();
-
-$alojamiento = Alojamiento::MostrarAlojamiento($db);
-
-
-
+require_once '../Controller/mostrarAlojamiento.php';
 ?>
 
 <!DOCTYPE html>
@@ -43,66 +20,7 @@ $alojamiento = Alojamiento::MostrarAlojamiento($db);
 </head>
 
 <body>
-  <div class="container-fluid pb-5">
-    <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">Navbar</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="reservacionesCliente.php">Reservaciones</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Dropdown
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">sxs</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li>
-                  <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
-              </ul>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-            </li>
-          </ul>
-
-
-          <div class="search-container me-3">
-            <form class="d-flex" role="search">
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-          </div>
-
-          <div class="login-container">
-            <div class="d-flex">
-              <?php
-              if ($auth->estaAutenticado()) {
-                // Si el usuario está autenticado, mostrar "Cerrar sesión"
-                echo '<a href="logout.php" class="btn btn-danger ms-auto">Cerrar Sesión</a>';
-              } else {
-                // Si no está autenticado, mostrar "Iniciar sesión"
-                echo '<a href="logIn2.php" class="btn btn-danger ms-auto">Iniciar Sesión</a>';
-              }
-              ?>
-            </div>
-          </div>
-
-
-
-        </div>
-    </nav>
-  </div>
+  <?php include '../Frontend/Layout/Navbar.php' ?>
 
   <!--lista de alojamientos -->
 
@@ -124,7 +42,11 @@ $alojamiento = Alojamiento::MostrarAlojamiento($db);
               <p class="card-text"><?php echo $aloja['tipo_alojamiento']; ?></p>
               <p class="card-price"><strong>Precio:</strong> $<?php echo $aloja['precio']; ?> por noche</p>
               <p class="card-availability"><strong>Estado:</strong> <?php echo $aloja['estado_alojamiento']; ?></p>
-              <a href="reservas.php?id_alojamiento=<?php echo $aloja['id_alojamiento']; ?>" class="btn btn-primary">Reservar</a>
+              <?php if ($aloja['estado_alojamiento'] === 'Alojamiento disponible') { ?>
+                <a href="reservas.php?id_alojamiento=<?php echo $aloja['id_alojamiento']; ?>" class="btn btn-primary">Reservar</a>
+              <?php } else { ?>
+                <button class="btn btn-secondary" onclick="mostrarAlerta()">No disponible</button>
+              <?php } ?>
             </div>
           </div>
         </div>
@@ -132,6 +54,17 @@ $alojamiento = Alojamiento::MostrarAlojamiento($db);
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert para alertar que no está disponible -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      function mostrarAlerta() {
+        Swal.fire({
+          icon: 'error',
+          title: 'No disponible',
+          text: 'Este alojamiento no está disponible para reservaciones.',
+        });
+      }
+    </script>
 
 </body>
 
