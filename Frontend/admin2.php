@@ -2,14 +2,15 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: admin2.php');
-    exit;
+    // header('location: admin2.php');
+    // exit;
+    // echo $user_id;
 }
 
 echo "<h1>Welcome, Admin</h1>";
-echo "<p>Name: " . $_SESSION['nombre'] . " " . $_SESSION['apellido'] . "</p>";
-echo "<p>Email: " . $_SESSION['email'] . "</p>";
-
+//echo "<p>Name: " . $_SESSION['nombre'] . " " . $_SESSION['apellido'] . "</p>";
+//echo "<p>Email: " . $_SESSION['email'] . "</p>";
+//echo  "<p>Administrador". $_SESSION['Administraor']."</p>";
 ?>
 
 <!DOCTYPE html>

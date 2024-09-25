@@ -17,9 +17,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($is_admin !== null) {
         if ($is_admin == 1) {
-            header('Location: admin.php');
+            header('Location: admin2.php');
         } else {
-            header('Location: index.php');
+            header('Location: index2.php');
         }
         exit;
     } else {
