@@ -1,0 +1,69 @@
+en cada pagina que debamos proteger agregar:
+// Verificar si el usuario está autenticado
+session_start();
+if (!isset($_SESSION['usuario_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+// Verificar si el usuario es admin
+if ($_SESSION['admin'] != true) {
+    header("Location: landing.php");
+    exit();
+}
+
+En la landing page, mostrarás los alojamientos con la opción de reservar solo si el usuario está autenticado.
+
+<?php if (isset($_SESSION['usuario_id'])): ?>
+    <button onclick="reservarAlojamiento()">Reservar</button>
+<?php else: ?>
+    <button onclick="swal({title: 'Debes iniciar sesión primero', text: '¿Deseas iniciar sesión ahora?', icon: 'warning', buttons: true}).then((willLogin) => { if (willLogin) { window.location.href = 'login.php'; }})">Reservar</button>
+<?php endif; ?>
+
+Vista de Alojamiento(Admin):
+En esta vista, el usuario admin hacer CRUD de alojamientos, ya que el acceso está restringido a usuarios admin.
+// CRUD para alojamientos
+if ($_SESSION['admin']) {
+    // Mostrar botones de CRUD solo para admin
+    echo '<button onclick="crearAlojamiento()">Crear</button>';
+    echo '<button onclick="editarAlojamiento()">Editar</button>';
+    echo '<button onclick="eliminarAlojamiento()">Eliminar</button>';
+}
+ejemplo para cerrar sesion:
+<a href="logout.php">Cerrar Sesión</a>
+para el archivo cerrar sesion.php
+<?php
+require_once 'Autenticacion.php';
+
+$auth = new Autenticacion($db);
+$auth->cerrarSesion();
+
+header("Location: landing.php");
+exit();
+?>
+
+/**Este código debe ir en un archivo dedicado al registro de usuarios. Este archivo se llamará cuando
+ * el usuario envíe el formulario de registro desde la vista de creación de cuentas. */
+// Comprobamos si el formulario fue enviado
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Validar que se reciban todos los campos necesarios
+    if (!empty($_POST['nombre']) && !empty($_POST['apellido']) && !empty($_POST['email']) && !empty($_POST['password'])) {
+        
+        $nombre = $_POST['nombre'];
+        $apellido = $_POST['apellido'];
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        
+        // Crear un nuevo cliente. Suponemos que $id_usuario será autogenerado por la base de datos.
+        $cliente = new Cliente(null, $nombre, $apellido, $email, $password); // Enviamos null si el id_usuario es autogenerado
+        
+        // Intentar crear el usuario en la base de datos
+        if ($cliente->crearUsuario($db)) {
+            echo "<script>Swal.fire('Success', 'Usuario registrado exitosamente', 'success');</script>";
+        } else {
+            echo "<script>Swal.fire('Error', 'Fallo al registrar usuario', 'error');</script>";
+        }
+    } else {
+        echo "<script>Swal.fire('Error', 'Todos los campos son requeridos', 'error');</script>";
+    }
+}
