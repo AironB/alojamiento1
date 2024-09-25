@@ -19,6 +19,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+
 // Obtener datos del usuario autenticado
 $id_usuario = $_SESSION['user_id'];
 
@@ -29,24 +30,25 @@ if (!isset($_GET['id_reservacion'])) {
     exit();
 }
 
+
 // Obtener el id de la reservación recibido por GET y convertirlo a entero
 $id_reservacion = isset($_GET['id_reservacion']) ? (int)$_GET['id_reservacion'] : 0;
-var_dump($_GET['id_reservacion']); // Para verificar el valor recibido
-echo "ID de reservación: " . $id_reservacion;
+
+//var_dump($_GET['id_reservacion']); // Para verificar el valor recibido
+
+//echo "ID de reservación: " . $id_reservacion;
+
 // Obtener las reservaciones del usuario actual
 $reservacion = Reservacion::mostrarReservacionesPorUsuario($db, $id_usuario);
-echo "<pre>";
-print_r($reservacion); // Esto mostrará todas las reservaciones del usuario actual
-echo "</pre>";
+
 // Buscar la reservación con el id especificado
 $reservacionParaEditar = null;
 foreach ($reservacion as $reservacionActual) {
-    echo "ID de reservación actual: " . $reservacionActual['id_reservacion'] . "<br>";
-    echo "<pre>";
-    print_r($reservacionActual); // Verifica la estructura de cada reservación
-    echo "</pre>";
+    // echo "ID de reservación actual: " . $reservacionActual['id_reservacion'] . "<br>";
+    // echo "<pre>";
+    // print_r($reservacionActual); // Verifica la estructura de cada reservación
+    // echo "</pre>";
     
-    // Asegúrate de que el campo 'id_reservacion' está definido antes de intentar acceder a él
     if (isset($reservacionActual['id_reservacion']) && (int)$reservacionActual['id_reservacion'] === $id_reservacion) {
         $reservacionParaEditar = $reservacionActual;
         break;
@@ -86,6 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Intentar editar la reservación
     if ($reservacionEditar->editarReservacion($db)) {
         echo "Reservación editada exitosamente.";
+        header('Location: reservacionesCliente.php');
     } else {
         echo "Error al editar la reservación.";
     }
@@ -166,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="form-container mx-auto">
                     <!-- Mostrar información del cliente -->
                     <form method="POST">
-                        <input type="text" name="id_alojamiento" value="<?php echo $reservacionParaEditar['id_alojamiento']; ?>">
+                        <input type="hidden" name="id_alojamiento" value="<?php echo $reservacionParaEditar['id_reservacion']; ?>">
                         <div class="mb-3">
                             <label for="nombre" class="form-label">Nombre del cliente:</label>
                             <input type="text" class="form-control" id="nombre" value="<?php echo $reservacionParaEditar['nombre_cliente']; ?> <?php echo $reservacionParaEditar['apellido']; ?>" readonly>

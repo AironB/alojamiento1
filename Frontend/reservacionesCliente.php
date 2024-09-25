@@ -2,22 +2,17 @@
 session_start();
 require_once '../Database/Database.php';
 require_once '../Backend/ReservacionCliente.php';
-
-if (!isset($_SESSION['id_usuario'])) {
-    header('Location: logIn2.php');
-    exit();
-}
+require_once '../Backend/Autenticacion.php';
+$auth = new Autenticacion();
+// Obtener datos del usuario autenticado
+$id_usuario = $_SESSION['user_id'];
 
 // Conexión a la base de datos
 $database = new Database();
 $db = $database->getConection();
 
-// Obtener el ID del usuario actual de la sesión
-$id_usuario = $_SESSION['id_usuario'];
-
 // Obtener las reservaciones del usuario actual del sistema
 $reservaciones = ReservacionCliente::MostrarReservacionesPorUsuario($db, $id_usuario);
-
 ?>
 
 <!DOCTYPE html>
