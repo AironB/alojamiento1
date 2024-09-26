@@ -7,16 +7,16 @@ $database = new Database();
 $db = $database->getConection();
 
 // ID del alojamiento a editar
-$id_alojamiento = 11; // Reemplaza con un ID existente
+$id_alojamiento = $_POST['id_alojamiento']; // Reemplaza con un ID existente
 
 // Nuevos datos para el alojamiento
-$nombre = "Prince One";
-$descripcion = "Descripción actualizada del hotel.";
-$ubicacion = "Nueva Ciudad de Prueba";
-$precio = 200.00;
+$nombre = $_POST['nombre'];
+$descripcion = $_POST['descripcion'];
+$ubicacion = $_POST['ubicacion'];
+$precio = $_POST['precio'];
 $estado = false; // Cambiar a no disponible
-$imagen = "hotel_actualizado.jpg";
-$id_tipo_alojamiento = 6; 
+$imagen = $_POST['imagen'];
+$id_tipo_alojamiento = $_POST['id_tipo_alojamiento']; 
 
 // Instanciar Alojamiento con el ID existente
 $alojamiento = new Alojamiento($id_alojamiento, $nombre, $descripcion, $ubicacion, $precio, $estado, $imagen, $id_tipo_alojamiento);

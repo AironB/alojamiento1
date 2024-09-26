@@ -1,4 +1,6 @@
-
+<?php
+require_once "../Frontend/register.php";
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

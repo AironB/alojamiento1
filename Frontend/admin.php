@@ -28,51 +28,10 @@ require_once '../Controller/mostrarAlojamiento.php';
     </div>
 
     <div class="container">
-        <div class="form-container">
-            <h2 class="mb-4 text-center">Agregar Alojamiento</h2>
-            <form action="addAlojamiento.php" method="POST">
-                <div class="mb-3">
-                    <label for="nombre" class="form-label">Nombre:</label>
-                    <input type="text" class="form-control" name="nombre" id="nombre" required>
-                </div>
-                <div class="mb-3">
-                    <label for="direccion" class="form-label">Descripcion:</label>
-                    <input type="text" class="form-control" name="descripcion" id="descripcion" required>
-                </div>
-                <div class="mb-3">
-                    <label for="telefono" class="form-label">Ubicacion:</label>
-                    <input type="text" class="form-control" name="Ubicacion" id="Ubicacion" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="precio" class="form-label">Precio:</label>
-                    <input type="text" class="form-control" name="precio" id="precio" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="categoria" class="form-label">Categoria:</label>
-                    <select class="form-control" name="categoria" id="categoria" required>
-                        <option value="">Seleccione una categoría</option>
-                        <option value="categoria1">Categoría 1</option>
-                        <option value="categoria2">Categoría 2</option>
-                        <option value="categoria3">Categoría 3</option>
-                        <!-- Agrega más opciones según sea necesario -->
-                    </select>
-                </div>
-
-
-                <div class="mb-3">
-                    <label for="imagen" class="form-label">Imagen:</label>
-                    <input type="file" class="form-control" name="imagen" id="imagen" accept="image/*" required>
-                </div>
-                <div class="text-center">
-                    <input type="submit" value="Agregar" class="form-submit btn btn-primary">
-                </div>
-            </form>
-        </div>
         <div class="container-fluid pt-5">
             <div class="col-12">
                 <h1 class="text-center">Alojamientos</h1>
+                <a href="crearAlojamiento.php" class="btn btn-primary">Agregar Alojamiento</a>
             </div>
             <div class="row">
                 <!-- Fila para las tarjetas -->

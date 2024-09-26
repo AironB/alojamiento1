@@ -2,8 +2,13 @@
 
 require_once '../Database/Database.php';
 require_once '../Backend/Alojamiento.php';
-require_once '../Backend/Cliente.php';
-session_start();
+//require_once '../Backend/Cliente.php';
+require_once '../Controller/mostrarAlojamiento.php';
+require_once '../Backend/TipoAlojamiento.php';
+//require_once '../test/testEditarAlojamiento.php';
+
+
+//session_start();
 
 
 
@@ -38,41 +43,24 @@ if (!$alojamiento) {
 
 // Manejar la solicitud POST para crear la reservación
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Obtener datos del formulario
-    // $fecha_entrada = $_POST['fecha_entrada'] ?? null;
-    // $fecha_salida = $_POST['fecha_salida'] ?? null;
-    // $cantidad_personas = intval($_POST['cantidad_personas'] ?? 1);
-    // $comentarios = $_POST['comentarios'] ?? '';
-    // $estado = true;
-    // Nuevos datos para el alojamiento
-$nombre = $_POST['nombre_alojamiento'] ?? null;
-$descripcion = "Descripción actualizada del hotel.";
-$ubicacion = "Nueva Ciudad de Prueba";
-$precio = 200.00;
-$estado = false; // Cambiar a no disponible
-$imagen = "hotel_actualizado.jpg";
-$id_tipo_alojamiento = 6;
-    if ($cantidad_personas < 1) {
-        $errors[] = "Debe haber al menos una persona.";
-    }
 
-    if (empty($errors)) {
-        // Crear una instancia de ReservacionCliente
-        require_once '../Backend/ReservacionCliente.php'; // Asegúrate de tener esta clase
+    $nombre = $_POST['nombre_alojamiento'] ?? null;
+    $descripcion = $_POST['descripcion'];
+    $ubicacion = $_POST['ubicacion'];
+    $precio = $_POST['precio'];
+    $estado = false; // Cambiar a no disponible
+    $imagen = $_POST['imagen'];
+    $id_tipo_alojamiento = $_POST['id_tipo_alojamiento'];
 
-        $reservacion = new ReservacionCliente(null, $id_usuario, $id_alojamiento, new DateTime($fecha_entrada), new DateTime($fecha_salida), $cantidad_personas, $comentarios, $estado);
 
-        // Crear la reservación
-        if ($reservacion->crearReservacion($db)) {
-            echo "<div class='alert alert-success'>Reservación creada exitosamente.</div>";
-            header('Location: index.php');
-        } else {
-            echo "<div class='alert alert-danger'>Hubo un error al crear la reservación.</div>";
-        }
+
+    
+    $alojamiento = new Alojamiento($id_alojamiento, $nombre, $descripcion, $ubicacion, $precio, $estado, $imagen, $id_tipo_alojamiento);
+
+    if ($alojamiento->editarAlojamiento($db)) {
+        echo "Alojamiento editado exitosamente.\n";
     } else {
-        foreach ($errors as $error) {
-            echo "<div class='alert alert-danger'>$error</div>";
-        }
+        echo "Error al editar el alojamiento.\n";
     }
 }
 
@@ -98,10 +86,10 @@ $id_tipo_alojamiento = 6;
         <span>Soy Administrador</span>
         <a href="logIn2.php" class="btn btn-danger ms-auto">Log out</a>
     </div>
-
+    <a href="admin.php" class="btn btn-primary">Regresar</a>
     <div class="container">
         <div class="form-container">
-            <h2 class="mb-4 text-center">Agregar Alojamiento</h2>
+            <h2 class="mb-4 text-center">Editar Alojamiento</h2>
             <form action="addAlojamiento.php" method="POST">
                 <div class="mb-3">
                     <label for="nombre_alojamiento" class="form-label">Nombre:</label>
@@ -109,25 +97,49 @@ $id_tipo_alojamiento = 6;
                 </div>
                 <div class="mb-3">
                     <label for="direccion" class="form-label">Descripcion:</label>
-                    <input type="text" class="form-control" name="descripcion" id="descripcion" required>
+                    <input type="text" class="form-control" name="descripcion" id="descripcion" value="<?php echo $alojamiento['descripcion']; ?>" required>
                 </div>
                 <div class="mb-3">
                     <label for="telefono" class="form-label">Ubicacion:</label>
-                    <input type="text" class="form-control" name="Ubicacion" id="Ubicacion" required>
+                    <input type="text" class="form-control" name="Ubicacion" id="Ubicacion" value="<?php echo $alojamiento['ubicacion']; ?>" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="precio" class="form-label">Precio:</label>
-                    <input type="text" class="form-control" name="precio" id="precio" required>
+                    <input type="text" class="form-control" name="precio" id="precio" value="$<?php echo $alojamiento['precio']; ?>" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="categoria" class="form-label">Categoria:</label>
-                    <select class="form-control" name="categoria" id="categoria" required>
-                        <option value="">Seleccione una categoría</option>
-                        <option value="categoria1">Categoría 1</option>
-                        <option value="categoria2">Categoría 2</option>
-                        <option value="categoria3">Categoría 3</option>
+                    <?php
+                    $valorPorDefecto = $alojamiento['tipo_alojamiento']; // Este valor lo obtienes de tu consulta a la base de datos
+
+                    // Ejemplo de un array de opciones que podrías obtener de la base de datos.
+                    $opciones = [
+                        "opcion1" => "Opción 1",
+                        "opcion2" => "Opción 2",
+                        "opcion3" => "Opción 3"
+                    ];
+                    ?>
+
+                    <select name="mi_select">
+                        <?php foreach ($opciones as $value => $label): ?>
+                            <option value="<?php echo $value; ?>" <?php echo ($value == $valorPorDefecto) ? 'selected' : ''; ?>>
+                                <?php echo $label; ?>
+                            </option>
+                        <?php endforeach; ?>
+
+                        <!--<select class="form-control" name="categoria" id="categoria" value="<//?php echo $alojamiento['tipo_alojamiento']; ?>" required>
+                            <option value="">Seleccione una categoría</option>
+                            <option value="categoria1">Categoría 1</option>
+                            <option value="categoria2">Categoría 2</option>
+                            <option value="categoria3">Categoría 3</option>
+                             Agrega más opciones según sea necesario 
+                        </select>-->
+
+
+
+
                         <!-- Agrega más opciones según sea necesario -->
                     </select>
                 </div>
@@ -135,10 +147,11 @@ $id_tipo_alojamiento = 6;
 
                 <div class="mb-3">
                     <label for="imagen" class="form-label">Imagen:</label>
-                    <input type="file" class="form-control" name="imagen" id="imagen" accept="image/*" required>
+                    <input type="text" class="form-control" name="imagen" id="imagen" value="<?php echo $alojamiento['imagen']; ?>" required>
                 </div>
                 <div class="text-center">
-                    <input type="submit" value="Agregar" class="form-submit btn btn-primary">
+                    <a href="admin.php?id_alojamiento=<?php echo $alojamiento['id_alojamiento']; ?>" class="btn btn-primary">Actualizar</a>
+                    <!--<input type="submit" value="Guardar" class="form-submit btn btn-primary">-->
                 </div>
             </form>
         </div>
