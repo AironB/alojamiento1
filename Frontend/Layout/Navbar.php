@@ -20,7 +20,7 @@
                     <?php
                     if ($auth->estaAutenticado()) {
                         // Si el usuario está autenticado, mostrar "Cerrar sesión"
-                        echo '<a href="../../Controller/logout.php" class="btn btn-danger ms-auto">Cerrar Sesión</a>';
+                        echo '<a href="logout.php" class="btn btn-danger ms-auto">Cerrar Sesión</a>';
                     } else {
                         // Si no está autenticado, mostrar "Iniciar sesión"
                         echo '<a href="logIn2.php" class="btn btn-danger ms-auto">Iniciar Sesión</a>';

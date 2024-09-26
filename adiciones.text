@@ -67,3 +67,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "<script>Swal.fire('Error', 'Todos los campos son requeridos', 'error');</script>";
     }
 }
+if ($_SESSION['is_admin'] == 1) {
+                header('Location: admin.php');
+            } else {
+                header('Location: index.php');
+            }
+            exit;
+        }

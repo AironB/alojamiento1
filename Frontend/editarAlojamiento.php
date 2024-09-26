@@ -1,8 +1,80 @@
 <?php
-require_once '../Controller/mostrarAlojamiento.php';
-require_once '../Backend/TipoAlojamiento.php';
 
-require_once '../Controller/mostrarAlojamiento.php';
+require_once '../Database/Database.php';
+require_once '../Backend/Alojamiento.php';
+require_once '../Backend/Cliente.php';
+session_start();
+
+
+
+$database = new Database();
+$db  = $database->getConection();
+
+
+// Verificar si el cliente está autenticado
+if (!isset($_SESSION['user_id'])) {
+    header('Location: logIn2.php');
+    exit();
+}
+
+// Obtener datos del usuario autenticado
+$id_usuario = $_SESSION['user_id'];
+
+
+// Verificar si se ha recibido el id del alojamiento
+if (!isset($_GET['id_alojamiento'])) {
+    echo "Error: No se ha especificado un alojamiento.";
+    exit();
+}
+
+$id_alojamiento = (int)$_GET['id_alojamiento'];
+$alojamiento = Alojamiento::MostrarAlojamientoPorId($db, $id_alojamiento);
+
+// Verificar si se ha encontrado el alojamiento
+if (!$alojamiento) {
+    echo "Error: El alojamiento no fue encontrado.";
+    exit();
+}
+
+// Manejar la solicitud POST para crear la reservación
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Obtener datos del formulario
+    // $fecha_entrada = $_POST['fecha_entrada'] ?? null;
+    // $fecha_salida = $_POST['fecha_salida'] ?? null;
+    // $cantidad_personas = intval($_POST['cantidad_personas'] ?? 1);
+    // $comentarios = $_POST['comentarios'] ?? '';
+    // $estado = true;
+    // Nuevos datos para el alojamiento
+$nombre = $_POST['nombre_alojamiento'] ?? null;
+$descripcion = "Descripción actualizada del hotel.";
+$ubicacion = "Nueva Ciudad de Prueba";
+$precio = 200.00;
+$estado = false; // Cambiar a no disponible
+$imagen = "hotel_actualizado.jpg";
+$id_tipo_alojamiento = 6;
+    if ($cantidad_personas < 1) {
+        $errors[] = "Debe haber al menos una persona.";
+    }
+
+    if (empty($errors)) {
+        // Crear una instancia de ReservacionCliente
+        require_once '../Backend/ReservacionCliente.php'; // Asegúrate de tener esta clase
+
+        $reservacion = new ReservacionCliente(null, $id_usuario, $id_alojamiento, new DateTime($fecha_entrada), new DateTime($fecha_salida), $cantidad_personas, $comentarios, $estado);
+
+        // Crear la reservación
+        if ($reservacion->crearReservacion($db)) {
+            echo "<div class='alert alert-success'>Reservación creada exitosamente.</div>";
+            header('Location: index.php');
+        } else {
+            echo "<div class='alert alert-danger'>Hubo un error al crear la reservación.</div>";
+        }
+    } else {
+        foreach ($errors as $error) {
+            echo "<div class='alert alert-danger'>$error</div>";
+        }
+    }
+}
 
 ?>
 
@@ -32,8 +104,8 @@ require_once '../Controller/mostrarAlojamiento.php';
             <h2 class="mb-4 text-center">Agregar Alojamiento</h2>
             <form action="addAlojamiento.php" method="POST">
                 <div class="mb-3">
-                    <label for="nombre" class="form-label">Nombre:</label>
-                    <input type="text" class="form-control" name="nombre" id="nombre" required>
+                    <label for="nombre_alojamiento" class="form-label">Nombre:</label>
+                    <input type="text" class="form-control" name="nombre_alojamiento" id="nombre_alojamiento" value="<?php echo $alojamiento['nombre_alojamiento']; ?>" required>
                 </div>
                 <div class="mb-3">
                     <label for="direccion" class="form-label">Descripcion:</label>
@@ -70,45 +142,6 @@ require_once '../Controller/mostrarAlojamiento.php';
                 </div>
             </form>
         </div>
-        <div class="container-fluid pt-5">
-            <div class="col-12">
-                <h1 class="text-center">Alojamientos</h1>
-            </div>
-            <div class="row">
-                <!-- Fila para las tarjetas -->
-                <?php
-                foreach ($alojamiento as $aloja) { ?>
-                    <div class="col-4 pb-3 pt-3">
-                        <div class="card">
-                            <img src="<?php echo $aloja['imagen']; ?>" class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title"><?php echo $aloja['nombre_alojamiento']; ?></h5>
-                                <p class="card-location"><strong>Ubicación:</strong> <?php echo $aloja['ubicacion']; ?></p>
-                                <p class="card-text"><?php echo $aloja['descripcion']; ?></p>
-                                <p class="card-text"><?php echo $aloja['tipo_alojamiento']; ?></p>
-                                <p class="card-price"><strong>Precio:</strong> $<?php echo $aloja['precio']; ?> por noche</p>
-                                <p class="card-availability"><strong>Estado:</strong> <?php echo $aloja['estado_alojamiento']; ?></p>
-                                    <a href="editarAlojamiento.php?id_alojamiento=<?php echo $aloja['id_alojamiento']; ?>" class="btn btn-primary">Editar</a>
-                            </div>
-                        </div>
-                    </div>
-                <?php } ?>
-            </div>
-
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-            <!-- SweetAlert para alertar que no está disponible -->
-            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-            <script>
-                function mostrarAlerta() {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'No disponible',
-                        text: 'Este alojamiento no está disponible para reservaciones.',
-                    });
-                }
-            </script>
-        </div>
-
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
