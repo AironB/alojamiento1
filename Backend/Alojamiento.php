@@ -22,12 +22,10 @@ class Alojamiento {
     }
 
     // Getters y Setters
-    public function getIdAlojamiento(): int {
     public function getIdAlojamiento(): ?int {
         return $this->id_alojamiento;
     }
 
-    public function setIdAlojamiento(int $id_alojamiento): void {
     public function setIdAlojamiento(?int $id_alojamiento): void {
         $this->id_alojamiento = $id_alojamiento;
     }
@@ -89,8 +87,34 @@ class Alojamiento {
     }
 
     // Métodos para gestionar el alojamiento
+    #mostrar Alojamiento por ID
+    public static function MostrarAlojamientoPorId(PDO $db, $id_alojamiento): array
+    {
+        //consulta sql para mostrar alojamiento
+        try {
+            $sql = "SELECT alojamientos.id_alojamiento, alojamientos.nombre_alojamiento, alojamientos.imagen, alojamientos.descripcion, 
+                        alojamientos.ubicacion, alojamientos.precio, 
+                        CASE WHEN alojamientos.estado = 1 THEN 'Alojamiento disponible' 
+                        ELSE 'Alojamiento no disponible' END AS estado_alojamiento, 
+                        tipo_alojamientos.nombre AS tipo_alojamiento
+                FROM alojamientos
+                INNER JOIN tipo_alojamientos 
+                ON alojamientos.id_tipo_alojamiento = tipo_alojamientos.id_tipo_alojamiento WHERE alojamientos.id_alojamiento = :id_alojamiento";
+            // Preparar la consulta
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam(':id_alojamiento', $id_alojamiento, PDO::PARAM_INT); // Protección contra inyecciones SQL
+            $stmt->execute();
+
+            // Obtener los resultados
+            $resultados = $stmt->fetch(PDO::FETCH_ASSOC); // fetch en lugar de fetchAll para obtener solo un registro
+            return $resultados ?: []; // Retorna un arreglo vacío si no encuentra resultados
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return [];
+        }
+    }
     #mostrar Alojamiento
-    public function MostrarAlojamiento(PDO $db): array {
+    public static function MostrarAlojamiento(PDO $db): array {
         //consulta sql para mostrar alojamiento
         try {
             $sql = "SELECT alojamientos.nombre_alojamiento, alojamientos.imagen, alojamientos.descripcion, 
