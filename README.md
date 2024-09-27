@@ -18,3 +18,7 @@ Con estos requisitos claros, el desarrollador está encargado de crear una aplic
 que la interfaz de usuario sea intuitiva y fácil de usar, y que la base de datos esté correctamente estructurada para manejar todos los datos necesarios. (listo)
 Al finalizar el proyecto, se requiere cargar todo el código a un repositorio en GitHub. Por favor, comparta el enlace público del repositorio en este espacio para su revisión.
 Archivos adicionales: DER y  UML(no tan estrictamente completo)
+Grupo de FSJ22 -
+Airon Mauricio Bautista Majano
+Cristian Alfredo Martinez García
+Isaac Alexander Castillo Lopez
