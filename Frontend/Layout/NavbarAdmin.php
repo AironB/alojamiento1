@@ -1,20 +1,19 @@
 <div class="container-fluid pb-5">
     <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top">
         <div class="container-fluid">
-            <p class="fs-1 font-bold">Alojamientos</p>
+            <p class="fs-1 font-bold">Alojamientos Administracion</p>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="index.php">Home</a>
+                        <a class="nav-link active" aria-current="page" href="admin.php">Home</a>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link" href="reservacionesCliente.php">Reservaciones</a>
-                    </li>
+                    </li> -->
             </div>
-
             <div class="login-container">
                 <div class="d-flex">
                     <?php

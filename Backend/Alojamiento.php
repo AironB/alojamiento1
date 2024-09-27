@@ -105,6 +105,33 @@ class Alojamiento
     }
 
     // Métodos para gestionar el alojamiento
+    public function alternarEstado(PDO $db): bool
+    {
+        try {
+            // Obtener el estado actual del alojamiento
+            $sql = "SELECT estado FROM alojamientos WHERE id_alojamiento = :id_alojamiento";
+            $stmt = $db->prepare($sql);
+            $stmt->execute([':id_alojamiento' => $this->getIdAlojamiento()]);
+            $estado_actual = $stmt->fetchColumn();
+
+            // Alternar el estado: Si es 1, cambiar a 0; si es 0, cambiar a 1
+            $nuevo_estado = $estado_actual == 1 ? 0 : 1;
+
+            // Actualizar el estado del alojamiento
+            $sql_update = "UPDATE alojamientos SET estado = :estado WHERE id_alojamiento = :id_alojamiento";
+            $stmt_update = $db->prepare($sql_update);
+            $stmt_update->execute([
+                ':estado' => $nuevo_estado,
+                ':id_alojamiento' => $this->getIdAlojamiento()
+            ]);
+
+            return true;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
+
     #mostrar Alojamiento
     public static function MostrarAlojamiento(PDO $db): array
     {
@@ -183,11 +210,24 @@ class Alojamiento
     public function editarAlojamiento(PDO $db): bool
     {
         try {
-            //consulta sql para editar alojamiento
+            // Validar que el tipo de alojamiento existe
+            $id_tipo_alojamiento = $this->getIdTipoAlojamiento();
+            $sqlCheck = "SELECT COUNT(*) FROM tipo_alojamientos WHERE id_tipo_alojamiento = :id_tipo_alojamiento";
+            $stmtCheck = $db->prepare($sqlCheck);
+            $stmtCheck->execute([':id_tipo_alojamiento' => $id_tipo_alojamiento]);
+            $count = $stmtCheck->fetchColumn();
+            
+            if ($count == 0) {
+                throw new Exception("Error: El tipo de alojamiento con ID $id_tipo_alojamiento no existe.");
+            }
+    
+            // Consulta SQL para editar alojamiento
             $sql = "UPDATE alojamientos SET nombre_alojamiento = :nombre, imagen = :imagen, descripcion = :descripcion, ubicacion = :ubicacion, precio = :precio, estado = :estado, id_tipo_alojamiento = :id_tipo_alojamiento WHERE id_alojamiento = :id_alojamiento";
-            //preparar la consulta
+            
+            // Preparar la consulta
             $stmt = $db->prepare($sql);
-            //ejecutar la consulta con los valores correspondientes
+            
+            // Ejecutar la consulta con los valores correspondientes
             $stmt->execute([
                 ':nombre' => $this->getNombre(),
                 ':imagen' => $this->getImagen(),
@@ -198,31 +238,37 @@ class Alojamiento
                 ':id_tipo_alojamiento' => $this->getIdTipoAlojamiento(),
                 ':id_alojamiento' => $this->getIdAlojamiento()
             ]);
+    
             return true;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
             return false;
+        } catch (Exception $e) {
+            echo $e->getMessage();
+            return false;
         }
     }
+    
     #administrador puede editar solo el estado del alojamiento
     public function actualizarEstado(PDO $db, bool $estado): bool
-    {
-        try {
-            //consulta sql para actualizar el estado de un alojamiento
-            $sql = "UPDATE alojamientos SET estado = :estado WHERE id_alojamiento = :id_alojamiento";
-            //preparar la consulta
-            $stmt = $db->prepare($sql);
-            //ejecutar la consulta con los valores correspondientes
-            $stmt->execute([
-                ':estado' => $estado,
-                ':id_alojamiento' => $this->getIdAlojamiento()
-            ]);
-            return true;
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-            return false;
-        }
+{
+    try {
+        // Consulta SQL para actualizar el estado de un alojamiento
+        $sql = "UPDATE alojamientos SET estado = :estado WHERE id_alojamiento = :id_alojamiento";
+        // Preparar la consulta
+        $stmt = $db->prepare($sql);
+        // Ejecutar la consulta con los valores correspondientes
+        $stmt->execute([
+            ':estado' => $estado,
+            ':id_alojamiento' => $this->getIdAlojamiento()
+        ]);
+        return true;
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+        return false;
     }
+}
+
     #aministrador puede eliminar un alojamiento
     public function eliminarAlojamiento(PDO $db): bool
     {
