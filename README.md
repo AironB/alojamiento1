@@ -22,3 +22,4 @@ Grupo de FSJ22 -
 Airon Mauricio Bautista Majano
 Cristian Alfredo Martinez García
 Isaac Alexander Castillo Lopez
+RUTA: alojamientos1/Frontend/index.php
