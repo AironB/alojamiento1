@@ -54,7 +54,7 @@
                     <input type="text" class="form-control" name="imagen" id="imagen" value="<?php echo $alojamiento['imagen']; ?>" required>
                 </div>
                 <div class="text-center">
-                    <input type="submit" value="Agregar" class="form-submit btn btn-primary">
+                    <input type="submit" value="Actualizar Alojamiento" class="form-submit btn btn-primary">
                     <a href="admin.php" class="btn btn-warning">Cancelar</a>
                 </div>
             </form>

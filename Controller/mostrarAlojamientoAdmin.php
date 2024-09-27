@@ -11,17 +11,11 @@ $database = new Database();
 $db  = $database->getConection();
 $auth = new Autenticacion();
 
-if (isset($_GET['reservar'])) {
-  if (!$auth->estaAutenticado()) {
+
+if (!$auth->estaAutenticado()) {
     //redirigir a login si no esta autenticado
-    //header('Location: logIn2.php?redirect=' . urlencode($_SERVER['REQUEST_URI']));
     header('Location: logIn2.php');
     exit();
-    //si esta autenticado continuar con la reservation
-  }
 }
+
 $alojamiento = Alojamiento::MostrarAlojamiento($db);
-
-
-
-?>

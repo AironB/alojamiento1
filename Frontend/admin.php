@@ -1,8 +1,6 @@
 <?php
-require_once '../Controller/mostrarAlojamiento.php';
+require_once '../Controller/mostrarAlojamientoAdmin.php';
 require_once '../Backend/TipoAlojamiento.php';
-
-require_once '../Controller/mostrarAlojamiento.php';
 
 ?>
 
