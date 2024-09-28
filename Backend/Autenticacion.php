@@ -45,7 +45,7 @@ class Autenticacion {
                 $_SESSION['apellido'] = $user['apellido'];
                 $_SESSION['email'] = $user['email'];
                 // Mensajes de depuración
-                error_log("Usuario autenticado: ID -> " . $_SESSION['user_id'] . ", Admin -> " . $_SESSION['is_admin']);
+                //error_log("Usuario autenticado: ID -> " . $_SESSION['user_id'] . ", Admin -> " . $_SESSION['is_admin']);
                 return true;
             } else {
                 return false;
