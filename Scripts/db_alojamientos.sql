@@ -8,7 +8,7 @@ create table usuarios(
 	apellido varchar(20) not null,
 	email varchar(100) not null,
 	/*Password es una palabra reservada por eso le puse passwrd*/
-	passwrd varchar(255) not null
+	password varchar(255) not null
 );
 /*tabla tipo_alojamiento*/
 create table tipo_alojamientos(
